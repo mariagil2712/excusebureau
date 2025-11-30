@@ -1,7 +1,6 @@
 //Código de María Gil e Isabella Ramírez
 
 #include <iostream>
-
 #include <list>
 #include <vector>
 #include <map>
@@ -43,7 +42,7 @@ public:
         if(subS.l.size() == 1) {
             list<pair<Element, int>>::iterator itsub = subS.l.begin();
             for(list<pair<Element, int>>::iterator itlist = l.begin(); itlist != l.end(); ++itlist) {
-                if((*itlist).first == (*itsub).first) {
+                if(itlist->first == itsub->first && itlist->second >= itsub->second) {
                     //Cuenta las ocurrencias cuando las repeticiones de una pareja en la secuencia son mayores a las de la subsecuencia y la subsecuencia tiene un solo elemento
                     ocurrences += (itlist->second - itsub->second) + 1;
                 }
@@ -95,7 +94,28 @@ public:
         cout << "]" << endl;
     }
 
+    list<Element> expand() {
+    list<Element> ans;
+    for(list<pair<Element, int>>::iterator it = l.begin(); it != l.end(); ++it) {
+        Element ele = it->first;
+        int rep = it->second;
+        for(int i = 0; i < rep; ++i){
+            ans.push_back(ele);
+        }
+    }
+    return ans;
+}
+
 };
+
+string descomprimirCCL(CompactChainList &ccl) {
+    string reporte;
+    list<Element> lista = ccl.expand();
+    for(list<Element>::iterator it = lista.begin(); it != lista.end(); ++it) {
+        reporte += (*it);
+    }
+    return reporte;
+}
 
 
 int main() {
@@ -144,6 +164,8 @@ int main() {
         while (x < concepts.size()) {
             concepts[x].printPairs();
             cout << endl;
+            string concepto = descomprimirCCL(concepts[x]);
+            cout << concepto << endl;
             x = x + 1;
         }
 
@@ -152,6 +174,8 @@ int main() {
         while (y < reports.size()) {
             reports[y].printPairs();
             cout << endl;
+            string reporte = descomprimirCCL(reports[y]);
+            cout << reporte << endl;
             y = y + 1;
         }
     }
