@@ -115,7 +115,7 @@ int main() {
     int K;
     int E;
     while (cin >> K >> E) {
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore();
 
         vector<vector<char>> concepts;
         vector<string> reports;
@@ -136,7 +136,7 @@ int main() {
             i = i + 1;
         }
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore();
 
         // convertir los reportes en vectores y guardarlos en reportesccl Y tmb en reportes donde estarán normales como string
         int m = 0;
