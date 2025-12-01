@@ -82,20 +82,6 @@ public:
         return ocurrences;
     }
 
-    void printPairs() {
-        int n = l.size();
-        int i = 0;
-        cout << "[";
-        for (auto& pareja : l) {
-            if( i < n - 1)
-                cout << "{" << pareja.first << ", " << pareja.second << "},";
-            else
-                cout << "{" << pareja.first << ", " << pareja.second << "}";
-            ++i;
-        }
-        cout << "]" << endl;
-    }
-
     list<Element> expand() {
         list<Element> ans;
         for(list<pair<Element, int>>::iterator it = l.begin(); it != l.end(); ++it) {
@@ -110,68 +96,72 @@ public:
 
 };
 
-
 int main() {
     int K;
     int E;
     while (cin >> K >> E) {
         cin.ignore();
 
-        vector<vector<char>> concepts;
-        vector<string> reports;
+        vector<vector<Element>> concepts;
+        vector<string> reports; //impresion
         vector<pair<int, CompactChainList>> reportsccl; //pares (ocurrencias, ccl)
 
         // convertir los conceptos en vectores de char y guardarlos en concepts
         int i = 0;
         while (i < K) {
             string con;
-            vector<char> temp;
             cin >> con;
+            vector<Element> temp;
+            temp.push_back(' '); // hueco al inicio y al final, evita encontrar medios conceptos
+
             size_t j = 0;
             while (j < con.size()) {
                 temp.push_back(con[j]);
                 j = j + 1;
             }
+            temp.push_back(' ');
             concepts.push_back(temp);
             i = i + 1;
         }
 
-        cin.ignore();
+        cin.ignore(); // ignorar el \n
 
-        // convertir los reportes en vectores y guardarlos en reportesccl Y tmb en reportes donde estarán normales como string
         int m = 0;
         while (m < E) {
             string rep;
-            vector<char> temp;
             getline(cin, rep);
-            reports.push_back(rep); //aqui lo guardo normal
-            size_t t = 0;
-            while (t < rep.size()) {
-                char temp2 = rep[t];
-                if (temp2 >= 'A' && temp2 <= 'Z') { //si es mayuscula
-                    temp2 = temp2 + 32;
-                }
-                temp.push_back(temp2);
-                t = t + 1;
-            }
-            reportsccl.push_back({0, CompactChainList(temp)});
-            m = m + 1;
-        }
+            reports.push_back(rep);
+            vector<Element> temp;
+            temp.push_back(' ');
 
-        int h = 0;
-        while (h < reportsccl.size()) { //por cada report en formato ccl
-            int g = 0;
-            while (g < concepts.size()) { //busco cada concepto
-                int ocurrencias = reportsccl[h].second.getConsecutiveOcurrences(concepts[g]); //ocurrencias del primer concepto
-                reportsccl[h].first = reportsccl[h].first + ocurrencias; //las sumo
-                g = g + 1; //avanzo de concepto
+            int j = 0;
+            while (j < rep.size()) {
+                char c = rep[j];
+                if (c >= 'A' && c <= 'Z') { //si es mayus -> minus
+                    c = c + 32;
+                }
+                if (c >= 'a' && c <= 'z') { // Si no es letra, ni modo
+                    temp.push_back(c);
+                } else {
+                    temp.push_back(' ');
+                }
+                j = j + 1;
             }
-            h = h + 1; //avanzo de ccl
+            temp.push_back(' ');
+            reportsccl.push_back({0, CompactChainList(temp)});
+
+            int g = 0;
+            while (g < concepts.size()) { // ya q recorro cada reporte (acabado de crear) verifico ocurrencias
+                int ocurrencias = reportsccl[m].second.getConsecutiveOcurrences(concepts[g]);
+                reportsccl[m].first = reportsccl[m].first + ocurrencias; //las sumo
+                g = g + 1;
+            }
+            m = m + 1;
         }
 
         int greatestOcurrencia = 0;
         int p = 0;
-        while (p < reportsccl.size()) { //buscaré cual fue el mayor numero de conceptos ocurridos en un mismo reporte
+        while (p < reportsccl.size()) { //buscarÃ© cual fue el mayor numero de conceptos ocurridos en un mismo reporte
             if (reportsccl[p].first > greatestOcurrencia) {
                 greatestOcurrencia = reportsccl[p].first;
             }
@@ -187,10 +177,7 @@ int main() {
             }
             u = u + 1;
         }
-
         cout << endl;
-
-
     }
 
     return 0;
