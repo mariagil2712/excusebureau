@@ -102,7 +102,7 @@ int main() {
     int K;
     int E;
     while (cin >> K >> E) {
-        cin.ignore();
+        cin.ignore();  // ← ignora el \n después de leer E
 
         vector<CompactChainList> concepts;
         vector<CompactChainList> reports;
@@ -139,7 +139,21 @@ int main() {
             m = m + 1;
         }
 
-        //buscar en cada report cada concepto;
+        // impresion (LO PUEDES BORRAR)
+        int x = 0;
+        while (x < concepts.size()) {
+            concepts[x].printPairs();
+            cout << endl;
+            x = x + 1;
+        }
+
+        // impresion (LO PUEDES BORRAR)
+        int y = 0;
+        while (y < reports.size()) {
+            reports[y].printPairs();
+            cout << endl;
+            y = y + 1;
+        }
     }
 
     return 0;
